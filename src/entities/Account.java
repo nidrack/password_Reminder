@@ -11,8 +11,11 @@ public class Account {
 	private String password;
 	private AccountType type;
 	
-	List<Account> accounts = new ArrayList<>();
+	private List<Account> accounts = new ArrayList<>();
 		
+	public Account() {
+	}
+	
 	public Account(String login, String password, AccountType type) {
 		this.login = login;
 		this.password = password;
@@ -49,6 +52,10 @@ public class Account {
 	
 	public void removeAccount(Account account) {
 		accounts.remove(account);
+
+	}
+	
+
 	}
 	
 }

@@ -11,8 +11,6 @@ public class Account {
 	private String password;
 	private AccountType type;
 	
-	private List<Account> accounts = new ArrayList<>();
-		
 	public Account() {
 	}
 	
@@ -46,17 +44,7 @@ public class Account {
 		this.type = type;
 	}
 
-	public void addAccount(Account account) {
-		accounts.add(account);
-	}
-	
-	public void removeAccount(Account account) {
-		accounts.remove(account);
 
-	}
-	
-
-	}
 	
 }
 

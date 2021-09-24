@@ -45,13 +45,10 @@ public class Main {
 			System.out.println("Import sucessesful!");
 		}
 
-		for (Account acc1 : accounts) {
-			System.out.println(
-					"Login: " + acc1.getLogin() + " Password: " + acc1.getPassword() + " Type: " + acc1.getType());
-		}
+		accountList(accounts);
 
 		// PREENCHENDO A LISTA COM OS DADOS SOLICITADOS
-		System.out.println("Add more? ");
+		System.out.println("Add more? (y/n) ");
 		a = sc.next().charAt(0);
 		sc.nextLine();
 
@@ -70,25 +67,20 @@ public class Main {
 				} catch (IllegalArgumentException e) {
 					System.out.println("Invalid type. Try again");
 				}
-
-				System.out.println("Add more? ");
+				System.out.println("Add more? (y/n)");
 				a = sc.next().charAt(0);
 				sc.nextLine();
 			} while (a == 'y');
-
 		} else {
-			for (Account acc1 : accounts) {
-				System.out.println(
-						"Login: " + acc1.getLogin() + " Password: " + acc1.getPassword() + " Type: " + acc1.getType());
-			}
+			accountList(accounts);
 		}
 
-		System.out.println("Save changes? ");
+		System.out.println("Save changes? (y/n)");
 		a = sc.next().charAt(0);
 		sc.nextLine();
 
+		// ESCREVENDO OS DADOS EM ARQUIVO
 		if (a == 'y') {
-			// ESCREVENDO OS DADOS EM ARQUIVO
 			try (BufferedWriter bwr = new BufferedWriter(new FileWriter(filePath))) {
 				for (Account item : accounts) {
 					bwr.write(item.getLogin() + "," + item.getPassword() + "," + item.getType());
@@ -98,15 +90,18 @@ public class Main {
 			} catch (IOException e) {
 				System.out.println("Error writing file: " + e.getMessage());
 			}
-
-			for (Account acc1 : accounts) {
-				System.out.println(
-						"Login: " + acc1.getLogin() + " Password: " + acc1.getPassword() + " Type: " + acc1.getType());
-			}
+			accountList(accounts);
 		} else {
 			System.out.println("Okie dokie");
 		}
 		sc.close();
+	}
+
+	public static void accountList(List<Account> list) {
+		for (Account acc : list) {
+			System.out.println(
+					"Login: " + acc.getLogin() + " Password: " + acc.getPassword() + " Type: " + acc.getType());
+		}
 	}
 
 }

@@ -1,8 +1,5 @@
 package entities;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import entities.enums.AccountType;
 
 public class Account {
@@ -43,8 +40,6 @@ public class Account {
 	public void setType(AccountType type) {
 		this.type = type;
 	}
-
-
 	
 }
 

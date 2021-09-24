@@ -1,5 +1,9 @@
 package application;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -12,13 +16,15 @@ public class Main {
 	public static void main(String[] args) {
 
 		Scanner sc = new Scanner(System.in);
-		String path = "c:\\temp\\accounts.csv";
-
+		
 		List<Account> accounts = new ArrayList<>();
 
 		char a;
 		Account acc;
+		
+		String filePath = "c:\\temp\\accounts.csv";
 
+		// PREENCHENDO A LISTA COM OS DADOS SOLICITADOS		
 		do {
 			try {
 				System.out.print("Login: ");
@@ -38,8 +44,18 @@ public class Main {
 			sc.nextLine();
 		} while (a == 'y');
 
+		// ESCREVENDO OS DADOS SOLICITADOS EM ARQUIVO
+		try (BufferedWriter bwr = new BufferedWriter(new FileWriter(filePath))) {
+			for (Account item : accounts) {
+				bwr.write(item.getLogin() + "," + item.getPassword() + "," + item.getType());
+			}
+			System.out.println(filePath + " CREATED!");
+		} catch (IOException e) {
+			System.out.println("Error writing file: " + e.getMessage());
+		}
+
 		for (Account acc1 : accounts) {
-			System.out.println("Login: " + acc1.getLogin() + " Password: " + acc1.getPassword());
+			System.out.println("Login: " + acc1.getLogin() + " Password: " + acc1.getPassword() + " Type: " + acc1.getType());
 		}
 		sc.close();
 	}

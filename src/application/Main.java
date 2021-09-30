@@ -11,6 +11,8 @@ import java.util.Scanner;
 
 import entities.Account;
 import entities.enums.AccountType;
+import entities.exceptions.AccountException;
+import entities.services.AccountService;
 
 public class Main {
 
@@ -25,49 +27,24 @@ public class Main {
 		String filePath = "c:\\temp\\accounts.csv";
 
 		// LENDO ARQUIVO EXISTENTE E ADICIONANDO A LISTA
-		try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+		System.out.print("Import existing list(y/n)? ");
+		a = sc.next().charAt(0);
+		sc.nextLine();
 
-			String itemCsv = br.readLine();
-			while (itemCsv != null) {
-
-				String[] fields = itemCsv.split(",");
-				String login = fields[0];
-				String pw = fields[1];
-				AccountType type = AccountType.valueOf(fields[2]);
-
-				accounts.add(new Account(login, pw, type));
-
-				itemCsv = br.readLine();
-			}
-		} catch (IOException e) {
-			System.out.println("Error writing file: " + e.getMessage());
-		} finally {
-			System.out.println("Import sucessesful!");
+		if (a == 'y') {
+			importList(accounts, filePath);
 		}
 
-		accountList(accounts);
-
 		// PREENCHENDO A LISTA COM OS DADOS SOLICITADOS
-		System.out.println("Add more? (y/n) ");
+		System.out.print("Add more? (y/n) ");
 		a = sc.next().charAt(0);
 		sc.nextLine();
 
 		if (a == 'y') {
 			// PREENCHENDO A LISTA COM OS DADOS SOLICITADOS
 			do {
-				try {
-					System.out.print("Login: ");
-					String login = sc.nextLine();
-					System.out.print("Password: ");
-					String pw = sc.nextLine();
-					System.out.print("Type: ");
-					AccountType type = AccountType.valueOf(sc.nextLine());
-
-					accounts.add(new Account(login, pw, type));
-				} catch (IllegalArgumentException e) {
-					System.out.println("Invalid type. Try again");
-				}
-				System.out.println("Add more? (y/n)");
+				addItems(accounts, sc);
+				System.out.print("Add more? (y/n) ");
 				a = sc.next().charAt(0);
 				sc.nextLine();
 			} while (a == 'y');
@@ -93,6 +70,7 @@ public class Main {
 			accountList(accounts);
 		} else {
 			System.out.println("Okie dokie");
+			accountList(accounts);
 		}
 		sc.close();
 	}
@@ -104,4 +82,52 @@ public class Main {
 		}
 	}
 
+	public static List<Account> importList(List<Account> accounts, String filePath) {
+		try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+
+			String itemCsv = br.readLine();
+			while (itemCsv != null) {
+
+				String[] fields = itemCsv.split(",");
+				String login = fields[0];
+				String pw = fields[1];
+				AccountType type = AccountType.valueOf(fields[2]);
+
+				accounts.add(new Account(login, pw, type));
+
+				itemCsv = br.readLine();
+				System.out.println("Import sucessesful!");
+			}
+		} catch (IOException e) {
+			System.out.println("Error writing file: " + e.getMessage());
+		} catch (ArrayIndexOutOfBoundsException e) {
+			System.out.println("File does not exist or is empty.");
+		}
+		return accounts;
+	}
+
+	public static void addItems(List<Account> accounts, Scanner sc) {
+		try {
+			System.out.print("Login: ");
+			String login = sc.nextLine();
+
+			if (AccountService.loginValidation(login)) {
+
+				System.out.print("Password: ");
+				String pw = sc.nextLine();
+
+				System.out.print("Type: ");
+				AccountType type = AccountType.valueOf(sc.nextLine());
+
+				accounts.add(new Account(login, pw, type));
+
+			} else {
+				throw new AccountException("Invalid email input. Try again");
+			}
+		} catch (IllegalArgumentException e) {
+			System.out.println("Invalid type. Try again");
+		} catch (AccountException e) {
+			System.out.println(e.getMessage());
+		}
+	}
 }
